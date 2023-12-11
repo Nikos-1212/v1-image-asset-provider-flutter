@@ -1,0 +1,43 @@
+name: "image_asset_provider"
+description: "A description of your project"
+version: 0.0.2
+homepage:
+publish_to: none
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=2.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  json_annotation: ^4.4.0
+  mockito: ^5.4.0
+  framework_contracts_flutter:
+    git:
+      url: git@github.com:discovery-ltd/v1-framework-contracts-flutter.git
+      path: framework_contracts_flutter
+      ref: 0.0.3
+  cached_network_image: ^3.2.3
+  flutter_cache_manager: ^3.3.0
+  flutter_svg: ^2.0.6
+  http: ^0.13.6
+  path: ^1.8.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_gen_runner: ^5.3.1
+  build_runner: ^2.3.3
+
+flutter:
+  assets:
+    - assets/images/
+    - assets/images/app_and_devices/
+    - assets/images/app_and_devices/sdk/
+    - assets/images/app_and_devices/vdp/
+    - assets/images/get_active_goal/
+    - assets/images/login_and_registration/
+    - assets/images/wheelspin/
+    

@@ -1,0 +1,113 @@
+---
+format_version: '11'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: flutter
+app:
+  envs:
+  - BITRISE_FLUTTER_PROJECT_LOCATION: image_asset_provider
+  - TESTING_APP: test_app
+  - SONARQUBE_URL: https://sonar.federation.vitalitydeveloper.com
+  - NEXUS_IQ_SERVER_URL: https://iqnexus.federation.vitalitydeveloper.com
+  - NEXUS_IQ_STAGE: build
+  - OUTPUT_PATH: "$BITRISE_SOURCE_DIR/Output"
+  - FRAMEWORK_SCHEME: image-asset-provider-flutter
+  - FRAMEWORK_NAME: image-asset-provider-flutter
+  - TESTING_SCHEME: image-asset-provider-flutter
+  - ANDROID_KEYSTORE_BRANCH: master
+  - ANDROID_KEYSTORE_PATH: "/opt/keystore/android.keystore"
+  - ANDROID_KEYSTORE_ALIAS: android-build-slave
+  - MIN_DT_VERSION: '8.207'
+  - XCFRAMEWORK_NAME: "$FRAMEWORK_NAME.xcframework"
+  - XCFRAMEWORK_PATH: "$OUTPUT_PATH/$XCFRAMEWORK_NAME"
+  - WORKSPACE_PATH: "$BITRISE_SOURCE_DIR/image-asset-provider-flutter.xcworkspace"
+  - FLUTTER_VERSION: 3.10.6
+  - DEPLOY_ANDROID_DJ: "/bitrise/src/app/build/outputs/apk/assetAdvance/release/"
+  - MAVEN_USER: disco-bot
+    opts:
+      is_expand: false
+  - opts:
+      is_expand: false
+    GRADLEW_PATH: "$BITRISE_FLUTTER_PROJECT_LOCATION/android/gradlew"
+
+trigger_map: #Merge triggers
+  - pull_request_target_branch: master
+    pull_request_source_branch: "*"
+    workflow: code_review_and_merge_build
+
+workflows:
+  code_review_and_merge_build:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+
+    - git-clone@8:
+        title: Cloning codebase without submodules
+        inputs:
+        - update_submodules: 'no'
+
+    after_run:
+    - _clone_utility_workspace
+    - _initiate_code_review_and_merge_build
+
+  release_module_build:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+
+    - git-clone@8:
+        title: Cloning codebase without submodules
+        inputs:
+        - update_submodules: 'no'
+
+    after_run:
+    - _clone_utility_workspace
+    - _initiate_release_module_build
+
+  # These are the Helper workflows
+  _clone_utility_workspace:
+    steps:
+    - activate-ssh-key@4.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+
+    - script@1.2:
+        title: Clone the Utility Pipeline
+        run_if: '{{getenv "PIPELINE_LIBS_CLONED" | eq "" }}'
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -e
+
+            pushd ${BITRISE_SOURCE_DIR} >/dev/null 2>&1
+
+            GIT_SERVER_URL=`dirname ${GIT_REPOSITORY_URL}`
+            git clone -b master $GIT_SERVER_URL/v1-pipeline-utility-workspace
+            envman add --key "PIPELINE_LIBS_CLONED" --value "true"
+
+            popd >/dev/null 2>&1
+
+  _initiate_code_review_and_merge_build:
+    steps:
+    - script@1.2:
+        title: Run the review worflow
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -e
+            cp -r v1-pipeline-utility-workspace/gutenberg/* .
+            bitrise run code_review_and_merge_build
+
+  _initiate_release_module_build:
+    steps:
+    - script@1.2:
+        title: Run the merge build
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -e
+            cp -r v1-pipeline-utility-workspace/gutenberg/* .
+            bitrise run release_module_build
+
+meta:
+  bitrise.io:
+    stack: osx-xcode-14.2.x-ventura
+    machine_type_id: g2-m1.8core

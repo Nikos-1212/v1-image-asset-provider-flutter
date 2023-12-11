@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'bundler', '~> 2.0'
+gem 'cmess'
+gem 'cocoapods', '~> 1.11.0'
+gem 'fastlane', '>= 2.127.2'
+gem 'rake'
+gem 'titleize'
+gem 'xcode-install'
+gem 'xcov'
