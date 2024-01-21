@@ -84,7 +84,7 @@ dependencies:
   ...
   image_asset_provider:
     git:
-      url: git@github.com:discovery-ltd/v1-image-provider-flutter.git
+      url: git@github.com:Nikos-1212/v1-image-asset-provider-flutter.git
       path: image_asset_provider
       ref: <latest version>
 ```
