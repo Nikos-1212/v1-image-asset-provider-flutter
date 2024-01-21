@@ -17,7 +17,7 @@ Gutenberg Project - Media Manager Module
 #### Get a PAT
 
 1. Head to https://github.com/settings/tokens and create a token with `repo` and `packages` scope
-2. Make sure this token is authorised to access `discovery-ltd` repositories
+2. Make sure this token is authorised to access `Nikos-1212` repositories
 
 #### iOS - Access token
 
@@ -84,7 +84,7 @@ dependencies:
   ...
   image_asset_provider:
     git:
-      url: git@github.com:discovery-ltd/v1-image-provider-flutter.git
+      url: git@github.com:Nikos-1212/v1-image-asset-provider-flutter.git
       path: image_asset_provider
       ref: <latest version>
 ```
