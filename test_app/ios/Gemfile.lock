@@ -233,7 +233,8 @@ GEM
       trailblazer-option (>= 0.1.1, < 0.2.0)
       uber (< 0.2.0)
     retriable (3.1.2)
-    rexml (3.2.5)
+    rexml (3.2.9)
+      strscan
     rouge (2.0.7)
     ruby-macho (2.5.1)
     ruby2_keywords (0.0.5)
@@ -249,6 +250,7 @@ GEM
       CFPropertyList
       naturally
     slack-notifier (2.4.0)
+    strscan (3.1.0)
     terminal-notifier (2.0.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
@@ -295,6 +297,7 @@ GEM
 
 PLATFORMS
   universal-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   bundler (~> 2.0)
